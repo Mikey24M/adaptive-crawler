@@ -20,9 +20,16 @@ class Settings(BaseSettings):
     max_depth: int = Field(default=2, ge=0)
     request_timeout: float = Field(default=10.0, gt=0)
     request_delay: float = Field(default=0.5, ge=0)
+
+    max_concurrent_requests: int = Field(default=10, ge=1)
     same_domain_only: bool = True
     respect_robots: bool = True
     retry_count: int = Field(default=2, ge=0)
+
+    user_agent: str = (
+        "AdaptiveCrawler/0.1 "
+        "(+https://github.com/Mikey24M/adaptive-crawler)"
+    )
 
 
 @lru_cache(maxsize=1)

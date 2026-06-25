@@ -1,6 +1,6 @@
 """Shared starter models for crawling workflows."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
@@ -33,3 +33,8 @@ class PageMetadata:
     title: str | None = None
     description: str | None = None
     canonical_url: str | None = None
+
+    headings: list[str] = field(default_factory=list)
+    internal_links: list[str] = field(default_factory=list)
+    external_links: list[str] = field(default_factory=list)
+    images: list[str] = field(default_factory=list)
