@@ -1,8 +1,10 @@
-"""FastAPI entrypoint for the crawler foundation."""
+"""FastAPI entrypoint for the NFL predictor service."""
 
 from fastapi import FastAPI
 
 from crawler.config import get_settings
+from crawler.models import GamePredictionRequest, GamePredictionResponse
+from crawler.predictor import predict_game
 
 
 def create_app() -> FastAPI:
@@ -10,30 +12,38 @@ def create_app() -> FastAPI:
 
     settings = get_settings()
     app = FastAPI(
-        title="Adaptive Crawler",
+        title="NFL Game Predictor",
         version="0.1.0",
-        description="Starter control plane for an adaptive distributed crawler.",
+        description="Predict NFL games from team strength, player availability, injuries, and schedule context.",
     )
 
     @app.get("/")
     def root() -> dict[str, object]:
         return {
-            "service": "adaptive-crawler",
+            "service": "nfl-game-predictor",
             "status": "ready",
-            "limits": {
-                "max_pages": settings.max_pages,
-                "max_depth": settings.max_depth,
-            },
+            "sport": "nfl",
             "features": {
-                "http_fetching": True,
-                "browser_fallback": "planned",
-                "distributed_queue": "planned",
+                "prediction_api": True,
+                "schedule_context": True,
+                "player_inputs": True,
+                "injury_adjustments": True,
+                "factor_breakdown": True,
+            },
+            "model_tuning": {
+                "home_field_edge": settings.home_field_edge,
+                "rest_day_edge_per_day": settings.rest_day_edge_per_day,
+                "injury_edge_multiplier": settings.injury_edge_multiplier,
             },
         }
 
     @app.get("/health")
     def health() -> dict[str, str]:
         return {"status": "ok"}
+
+    @app.post("/predict", response_model=GamePredictionResponse)
+    def predict(payload: GamePredictionRequest) -> GamePredictionResponse:
+        return predict_game(payload, settings)
 
     return app
 
