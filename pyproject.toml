@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "adaptive-crawler"
 version = "0.1.0"
-description = "Starter foundation for an adaptive distributed web crawler."
+description = "FastAPI foundation for an NFL game predictor."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

@@ -16,7 +16,7 @@ async def fetch_url(url: str, settings: Settings) -> FetchResult:
     Future TODO:
     - add retry backoff
     - robot aware scheduling
-    - playwright fallbacks for javascript 
+    - playwright fallbacks for javascript
     """
 
     timeout = httpx.Timeout(settings.request_timeout)
@@ -35,10 +35,7 @@ async def fetch_url(url: str, settings: Settings) -> FetchResult:
 
         content_type = response.headers.get("content-type", "")
 
-        if not (
-            "text/html" in content_type
-            or "application/xhtml+xml" in content_type
-        ):
+        if not ("text/html" in content_type or "application/xhtml+xml" in content_type):
             return FetchResult(
                 url=url,
                 final_url=str(response.url),
@@ -46,7 +43,7 @@ async def fetch_url(url: str, settings: Settings) -> FetchResult:
                 content_type=content_type,
                 content=None,
                 error=f"Unsupported content type: {content_type}",
-        )
+            )
 
         return FetchResult(
             url=url,
