@@ -14,7 +14,10 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="NFL Game Predictor",
         version="0.1.0",
-        description="Predict NFL games from team strength, player availability, injuries, and schedule context.",
+        description=(
+            "Predict NFL games from team strength, player availability, "
+            "injuries, and schedule context."
+        ),
     )
 
     @app.get("/")

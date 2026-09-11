@@ -25,8 +25,7 @@ class Settings(BaseSettings):
     confidence_smoothing: float = Field(default=7.5, gt=0)
 
     user_agent: str = (
-        "NFLGamePredictor/0.1 "
-        "(+https://github.com/Mikey24M/adaptive-crawler)"
+        "NFLGamePredictor/0.1 " "(+https://github.com/Mikey24M/adaptive-crawler)"
     )
 
 

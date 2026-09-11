@@ -35,20 +35,16 @@ def predict_game(
 
     factor_deltas = {
         "roster_strength": _roster_strength_delta(home, away),
-        "quarterback": 0.16
-        * (home.quarterback_rating - away.quarterback_rating),
+        "quarterback": 0.16 * (home.quarterback_rating - away.quarterback_rating),
         "recent_form": 1.4 * (home.recent_form - away.recent_form),
         "key_players": settings.key_player_edge_multiplier
         * (_key_player_value(home) - _key_player_value(away)),
         "injuries": settings.injury_edge_multiplier
         * (_injury_burden(away) - _injury_burden(home)),
-        "rest": settings.rest_day_edge_per_day
-        * (home.rest_days - away.rest_days),
+        "rest": settings.rest_day_edge_per_day * (home.rest_days - away.rest_days),
         "travel": settings.travel_penalty_per_500_miles
         * ((away.travel_miles - home.travel_miles) / 500),
-        "venue": 0.0
-        if context.neutral_site
-        else settings.home_field_edge,
+        "venue": 0.0 if context.neutral_site else settings.home_field_edge,
         "weather": _weather_delta(home, away, context.weather),
         "playoff_urgency": 0.35
         * (context.playoff_urgency_home - context.playoff_urgency_away),
@@ -58,9 +54,7 @@ def predict_game(
     if context.divisional_game:
         total_delta *= 0.92
 
-    home_win_probability = 1 / (
-        1 + exp(-total_delta / settings.confidence_smoothing)
-    )
+    home_win_probability = 1 / (1 + exp(-total_delta / settings.confidence_smoothing))
     away_win_probability = 1 - home_win_probability
     predicted_winner = home.name if total_delta >= 0 else away.name
     confidence_tier = _confidence_tier(abs(home_win_probability - 0.5))
@@ -96,8 +90,7 @@ def _key_player_value(team: TeamProfile) -> float:
 
 def _injury_burden(team: TeamProfile) -> float:
     return sum(
-        injury.impact_rating * STATUS_WEIGHTS[injury.status]
-        for injury in team.injuries
+        injury.impact_rating * STATUS_WEIGHTS[injury.status] for injury in team.injuries
     )
 
 
@@ -197,7 +190,10 @@ def _build_factor_impacts(
                 team="matchup",
                 category="divisional_familiarity",
                 score_delta=0.08,
-                explanation="divisional opponents usually compress outcomes and lower certainty",
+                explanation=(
+                    "divisional opponents usually compress outcomes and "
+                    "lower certainty"
+                ),
             )
         )
 
@@ -214,12 +210,12 @@ def _build_summary(
     ][:3]
     if top_factors:
         summary = (
-            f"{predicted_winner} gets the edge because "
-            + ", ".join(top_factors)
-            + "."
+            f"{predicted_winner} gets the edge because " + ", ".join(top_factors) + "."
         )
     else:
-        summary = f"{predicted_winner} has the slimmest edge in an otherwise even matchup."
+        summary = (
+            f"{predicted_winner} has the slimmest edge in an otherwise " "even matchup."
+        )
     if divisional_game:
         summary += " Divisional familiarity trims the confidence a bit."
     return summary

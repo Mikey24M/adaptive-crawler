@@ -1,6 +1,7 @@
 """Shared models for the NFL game predictor."""
 
-from dataclasses import dataclass, field as dataclass_field
+from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from enum import StrEnum
 
 from pydantic import BaseModel, Field
