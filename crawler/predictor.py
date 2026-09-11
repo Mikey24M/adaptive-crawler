@@ -212,7 +212,14 @@ def _build_summary(
     top_factors = [
         factor.explanation for factor in factors if factor.team != "matchup"
     ][:3]
-    summary = f"{predicted_winner} gets the edge because " + ", ".join(top_factors) + "."
+    if top_factors:
+        summary = (
+            f"{predicted_winner} gets the edge because "
+            + ", ".join(top_factors)
+            + "."
+        )
+    else:
+        summary = f"{predicted_winner} has the slimmest edge in an otherwise even matchup."
     if divisional_game:
         summary += " Divisional familiarity trims the confidence a bit."
     return summary
